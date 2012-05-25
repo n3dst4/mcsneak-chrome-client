@@ -1,0 +1,30 @@
+{
+    "name": "McSneak support",
+    "version": "0.1",
+    "description": "McSneak around blocked domains",
+    "icons": {
+        "16": "mcsn_16.png",
+        "48": "mcsn_48.png",
+        "128": "mcsn_128.png"
+    },
+    "permissions": [
+        "tabs",
+        "webRequest",
+        "webRequestBlocking",
+        "*://*/*"
+    ],
+    "background_page": "background.html",
+    "content_scripts": [
+        {
+            "matches": ["http://*/*"],
+            "js": ["content.js"]
+        }
+        
+    ],
+     "options_page": "options.html",
+    "browser_action": {
+        "default_icon": "mcsn_19.png", // optional
+        "default_title": "McSneak",      // optional; shown in tooltip
+        "default_popup": "popup.html"        // optional
+    }
+}

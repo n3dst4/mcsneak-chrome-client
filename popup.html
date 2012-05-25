@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+    <head>
+        <script src=url.js></script>
+        <style>
+            body { font-family: sans-serif; white-space: nowrap;}
+            a:link, a:visited { color: #333; text-decoration: none; }
+            a:hover { color: #275dc8; text-decoration: underline; }
+        </style>
+    </head>
+    <body>
+        <a href="" id=add-domain>Sneak to this domain</a>
+    </body>
+    <script type=text/javascript>
+        document.getElementById("add-domain").
+            addEventListener("click", function(ev){
+                chrome.tabs.getSelected(null, function(tab) {
+                    var host = URL(tab.url).host();
+                    chrome.extension.sendRequest({sneakDomain: host});
+                });                
+            });
+    </script>
+    
+</html>

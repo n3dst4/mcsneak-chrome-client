@@ -1,0 +1,51 @@
+<!doctype html>
+<!--<h1>McSn Options</h1>-->
+<p data-bind="text: foo"></p>
+
+<ul data-bind="foreach: brokenDomains">
+    <li>
+        <span data-bind="text: $data"></span>
+        <a href="#" data-bind="click: $parent.removeDomain">Remove</a>
+    </li>
+</ul>
+
+<form data-bind="submit: addDomain">
+    <input id="new-input">
+    <input type="submit" value="Add">
+</form>
+
+<script src="knockout-2.0.0.js"></script>
+<script>
+
+localStorage.brokenDomains = localStorage.brokenDomains || [];
+
+var viewModel = {
+    foo: "bar",
+    brokenDomains: ko.observableArray(localStorage.brokenDomains),
+    
+    removeDomain: function () {
+        viewModel.brokenDomains.remove(this.toString());
+        viewModel.syncStorage();
+    },
+    
+    addDomain: function () {
+        var newDomain = document.getElementById("new-input").value;
+        viewModel.brokenDomains.push(newDomain);
+        viewModel.syncStorage();
+    },
+    
+    syncStorage: function () {
+        localStorage.brokenDomains = viewModel.brokenDomains();
+    }
+    
+    
+};
+
+ko.applyBindings(viewModel);
+
+</script>
+
+
+
+
+

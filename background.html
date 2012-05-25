@@ -1,0 +1,96 @@
+<!doctype html>
+<script src=url.js></script>
+<script>
+var damagedDomains = {
+        // uncomment to preload
+        
+        //"rockpapershotgun.com": true,
+        //"www.rockpapershotgun.com": true,
+        //"storify.com": true,
+        //"twitter.com": true
+        //"si0.twimg.com": true
+    },
+    hopelessDomains = {},
+    forbiddenStatus = 403,
+    sneakSuffix = ".mcsneak.jit.su";
+
+
+// event handler fired before requests go out
+// fired synchronously so opportunity to redirect if host name is known-bad
+chrome.webRequest.onBeforeRequest.addListener(
+    function(details) {
+        var url = URL(details.url),
+            host = url.host();
+        if (damagedDomains[host] && !hopelessDomains[host]) {
+            url.host(host + sneakSuffix);
+            return {redirectUrl: url.toString()};
+        }
+    },
+    // filters
+    {
+        urls: ["<all_urls>"]
+    },
+     // extraInfoSpec
+    ["blocking"] // make it synchronous
+);
+
+
+// event handler fired when request complete
+// if we get a Denied response even when sneakng, stop trying to sneak
+chrome.webRequest.onCompleted.addListener(
+    function (details) {
+        var host = URL(details.url).host();
+        if (details.statusCode === forbiddenStatus) {
+            if (host.slice(host.length - sneakSuffix.length) === sneakSuffix) {
+                host = host.slice(0, host.length - sneaksuffix);
+                hopelessDomains[host] = true;
+            }
+            else {
+                damagedDomains[host]  = true;
+                chrome.tabs.reload();
+            }
+        }
+    },
+    // filters
+    {
+        urls: ["http://*/*"]
+    }
+);
+
+
+// handle incoming request from popup
+chrome.extension.onRequest.addListener(
+    function(request, sender, sendResponse) {
+        if (request.sneakDomain) {
+            damagedDomains[request.sneakDomain] = true;
+            chrome.tabs.reload();
+        }
+    }
+);
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
