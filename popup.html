@@ -1,16 +1,25 @@
 <!doctype html>
 <html>
     <head>
-        <script src=url.js></script>
+        <link rel="stylesheet" href="font-awesome.css"/>
         <style>
             body { font-family: sans-serif; white-space: nowrap;}
             a:link, a:visited { color: #333; text-decoration: none; }
             a:hover { color: #275dc8; text-decoration: underline; }
+            p.options { font-size: small; text-align: right; margin: 0; padding:0; }
+            p.options a:link, p.options  a:visited { color: #666; }
+            p.options a:hover { color: #275dc8; text-decoration: none; }
         </style>
     </head>
     <body>
-        <a href="" id=add-domain>Sneak to this domain</a>
+        <p class="link">
+            <a href="" id=add-domain>Sneak to this domain</a>
+        <p class="options">
+            <a href="options.html" id=add-domain>
+                <i class="icon-cog"></i> Options
+            </a>
     </body>
+    <script src=url.js></script>
     <script type=text/javascript>
         document.getElementById("add-domain").
             addEventListener("click", function(ev){

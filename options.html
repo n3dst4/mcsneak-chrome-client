@@ -44,12 +44,12 @@ li:hover .remover { visibility: visible; }
 </style>
 
 
-<form data-bind="submit: function() { addDamagedDomain($('#new-input').val()) }">
+<form id="adding-form">
     <input id="new-input">
     <input type="submit" value="Add">
 </form>
 
-<ul data-bind="foreach: damagedDomains">
+<ul id="damaged-domains-list">
     <li>
         <a href="#" class="remover" data-bind="click: $parent.removeDamagedDomain">
             <i class="icon-remove-sign"></i>
@@ -62,82 +62,7 @@ li:hover .remover { visibility: visible; }
 <script src="knockout-2.1.0.js"></script>
 <script src="jquery-1.7.1.min.js"></script>
 <script src="underscore-min.js"></script>
-<script>
-var parentWindow = chrome.extension.getBackgroundPage();
-var parentViewModel = parentWindow.viewModel;
-var initialWWWRe = /^www\d*\./i;
-
-var viewModel = {
-    init: function() {
-        viewModel.damagedDomains(parentViewModel.damagedDomains());
-        viewModel.hopelessDomains(parentViewModel.hopelessDomains());
-        viewModel.sortDamagedDomains();
-        viewModel.sortHopelessDomains();
-    },
-    
-    damagedDomains: ko.observableArray(),
-
-    hopelessDomains: ko.observableArray(),
-    
-    addDamagedDomain: function (domain) {
-        if (viewModel.damagedDomains.indexOf(domain) === -1) {
-            viewModel.damagedDomains.push(domain);
-            viewModel.sortDamagedDomains();
-        }
-        parentViewModel.addDamagedDomain(domain);
-    },
-    
-    addHopelessDomain: function (domain) {
-        if (viewModel.hopelessDomains.indexOf(domain) === -1) {
-            viewModel.hopelessDomains.push(domain);
-            viewModel.sortHopelessDomains();
-        }
-        parentViewModel.addHopelessDomain(domain);
-    },
-    
-    removeDamagedDomain: function (domain) {
-        viewModel.damagedDomains.remove(domain);
-        parentViewModel.removeDamagedDomain(domain);
-    },
-    
-    removeHopelessDomain: function (domain) {
-        viewModel.hopelessDomains.remove(domain);
-        parentViewModel.removeHopelessDomain(domain);
-    },
-    
-    isDamaged: function (domain) {
-        return viewModel.damagedDomains.indexOf(domain) !== -1;
-    },
-    
-    isHopeless: function (domain) {
-        return viewModel.hopelessDomains.indexOf(domain) !== -1;
-    },
-    
-    sortDamagedDomains: function() {
-        viewModel.damagedDomains.sort(compareWithoutWWW);
-    },
-    
-    sortHopelessDomains: function() {
-        viewModel.damagedDomains.sort(compareWithoutWWW);
-    }
-    
-};
-
-viewModel.init();
-
-
-function compareWithoutWWW(a, b) {
-    a = a.replace(initialWWWRe, '');
-    b = b.replace(initialWWWRe, '');
-    return (a == b) ? 0 :
-        (a < b)? -1 : 1;
-}
-
-$(function(){
-    ko.applyBindings(viewModel);
-});
-
-</script>
+<script src="options.js"></script>
 
 
 
