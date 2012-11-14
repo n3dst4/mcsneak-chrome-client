@@ -5,61 +5,48 @@
         //"storify.com": true,
         //"twitter.com": true
         //"si0.twimg.com": true
-
-var damagedDomains = localStorage.getItem("damagedDomains"),
-    hopelessDomains = localStorage.getItem("hopelessDomains"),
+        
+var domainsJSON = localStorage.getItem("domains"),
     forbiddenStatus = 403,
     forbiddenStatusRe = /^HTTP\/[0-9.]+ 403/,
     sneakSuffix = ".mcsneak.jit.su";
 
-
-// View model
-window.viewModel = {
-    damagedDomains: ko.observableArray(
-        damagedDomains? JSON.parse(damagedDomains) : []),
-    
-    hopelessDomains: ko.observableArray(
-        hopelessDomains? JSON.parse(hopelessDomains) : []),
-
-    addDamagedDomain: function (domain) {
-        if (this.damagedDomains.indexOf(domain) === -1) {
-            this.damagedDomains.push(domain);
+var DomainModel = Backbone.Model.extend({
+    initialize: function () {},
+    whitelist: function (domain) {
+        this.removeFromList("black", domain);
+        this.addToList("white", domain);
+    },
+    blacklist: function (domain) {
+        this.removeFromList("white", domain);
+        this.addToList("black", domain);
+    },
+    addToList: function (listName, domain) {
+        list = _(this.get(listName));
+        if ( ! list.contains(domain)) {
+            var idx = list.sortedIndex(domain);
+            list.splice(idx, 0, domain);
         }
-        this._syncStorage();
+        this.set(listName, list);
+        this.trigger(listName + "list", domain);
     },
-    
-    addHopelessDomain: function (domain) {
-        if (this.hopelessDomains.indexOf(domain) === -1) {
-            this.hopelessDomains.push(domain);
-        }
-        this._syncStorage();
+    removeFromList: function (listName, domain) {    
+        this.set(listName, _(this.get(listName)).without(domain));
+        this.trigger("un" + listName + "list", domain);
     },
-    
-    removeDamagedDomain: function (domain) {
-        this.damagedDomains.remove(domain);
-        this._syncStorage();
+    isWhitelisted: function (domain) {
+        return this.isOnList("white", domain);
     },
-    
-    removeHopelessDomain: function (domain) {
-        this.hopelessDomains.remove(domain);
-        this._syncStorage();
+    isBlacklisted: function (domain) {
+        return this.isOnList("black", domain);
     },
-    
-    isDamaged: function (domain) {
-        return this.damagedDomains.indexOf(domain) !== -1;
+    isOnList: function (list, domain) {
+        return _(this.get(list)).contains(domain);
     },
-    
-    isHopeless: function (domain) {
-        return this.hopelessDomains.indexOf(domain) !== -1;
-    },
-    
-    _syncStorage: function () {
-        localStorage.setItem("damagedDomains", JSON.stringify(this.damagedDomains()));
-        localStorage.setItem("hopelessDomains", JSON.stringify(this.hopelessDomains()));
-    }
-};
+});
 
-
+domains = new DomainModel(
+    domainsJSON? JSON.parse(domainsJSON) : {white: [], black: []});
 
 
 // event handler fired before requests go out
@@ -68,7 +55,7 @@ chrome.webRequest.onBeforeRequest.addListener(
     function(details) {
         var url = URL(details.url),
             host = url.host();
-        if (viewModel.isDamaged(host) && !viewModel.isHopeless(host)) {
+        if (domains.isWhitelisted(host)) {
             url.host(host + sneakSuffix);
             return {redirectUrl: url.toString()};
         }
@@ -91,11 +78,11 @@ chrome.webRequest.onHeadersReceived.addListener(
             console.log(details.url + " was forbidden");
             if (host.slice(host.length - sneakSuffix.length) === sneakSuffix) {
                 host = host.slice(0, host.length - sneaksuffix);
-                viewModel.addHopelessDomain(host);
+                domains.blacklist(host);
             }
             else {
                 console.log(host + " added to damaged list");
-                viewModel.addDamagedDomain(host);
+                domains.whitelist(host);
                 chrome.tabs.get(details.tabId, function(tab){
                     if (tab.url === details.url) {
                         chrome.tabs.reload(tab.id);
@@ -130,8 +117,32 @@ chrome.webRequest.onErrorOccurred.addListener(
 chrome.extension.onRequest.addListener(
     function(request, sender, sendResponse) {
         if (request.sneakDomain) {
-            viewModel.addDamagedDomain(request.sneakDomain);
+            domains.whitelist(request.sneakDomain);
             chrome.tabs.reload();
         }
     }
 );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

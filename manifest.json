@@ -1,5 +1,5 @@
 {
-    "manifest_version": 1,
+    "manifest_version": 2,
     "name": "McSneak support",
     "version": "0.2",
     "description": "McSneak around blocked domains",
@@ -19,7 +19,8 @@
     "background": {
         "scripts": [
             "url.js",
-            "knockout-2.1.0.js",
+            "underscore.js",
+            "backbone.js",
             "background.js"
         ]
     },
