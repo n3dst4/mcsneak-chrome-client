@@ -1,67 +1,90 @@
 <!doctype html>
-<h1>McSneak: Bypassed sites</h1>
-
-<link rel="stylesheet" href="font-awesome.css"/>
-
+<title>Options</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="vendor/css/font-awesome.css"/>
+<link rel="stylesheet" href="vendor/css/bootstrap.css"/>
+<link href="vendor/css/bootstrap-responsive.css" rel="stylesheet">
 <style type="text/css">
-body { font-family: sans-serif; white-space: nowrap; color: #444;}
+    
+    
+    ul {margin: 0; padding:0; min-height: 2em;}
+    li { list-style-type: none; margin: 0.3em 0 0 0; padding-right: 1em;
+        height: 1.5em; }
+    
+    .remover { visibility: hidden; text-decoration: none;
+        color: inherit;}
+    .remover:hover { color: #c00;}
+    .remover .label { display: none; }
+    
+    li:hover { background-color: #eee; }
+    li:hover .remover { visibility: visible; }
+        
 
-h1 { font-size: 1em; }
-
-ul {margin: 0; padding:0;}
-li { list-style-type: none; margin: 0.3em 0 0 0; padding-right: 1em; }
-
-.remover { visibility: hidden; text-decoration: none; color: inherit;}
-.remover:hover { color: #c00;}
-.remover .label { display: none; }
-
-li:hover { background-color: #eee; }
-li:hover .remover { visibility: visible; }
-
-@media screen and (min-width : 40em) {
-  ul { -webkit-column-count: 2; }
-}
-@media screen and (min-width : 60em) {
-  ul { -webkit-column-count: 3; }
-}
-@media screen and (min-width : 80em) {
-  ul { -webkit-column-count: 4; }
-}
-@media screen and (min-width : 100em) {
-  ul { -webkit-column-count: 5; }
-}
-@media screen and (min-width : 120em) {
-  ul { -webkit-column-count: 6; }
-}
-@media screen and (min-width : 140em) {
-  ul { -webkit-column-count: 7; }
-}
-@media screen and (min-width : 160em) {
-  ul { -webkit-column-count: 8; }
-}
-
-
+        
+/*    @media screen and (min-width : 40em) {
+      ul { -webkit-column-count: 2; }
+    }
+    @media screen and (min-width : 60em) {
+      ul { -webkit-column-count: 3; }
+    }
+    @media screen and (min-width : 80em) {
+      ul { -webkit-column-count: 4; }
+    }
+    @media screen and (min-width : 100em) {
+      ul { -webkit-column-count: 5; }
+    }
+    @media screen and (min-width : 120em) {
+      ul { -webkit-column-count: 6; }
+    }
+    @media screen and (min-width : 140em) {
+      ul { -webkit-column-count: 7; }
+    }
+    @media screen and (min-width : 160em) {
+      ul { -webkit-column-count: 8; }
+    }*/
 </style>
 
 
-<form id="adding-form">
-    <input id="new-input">
-    <input type="submit" value="Add">
-</form>
 
-<ul id="damaged-domains-list">
-    <li>
-        <a href="#" class="remover" data-bind="click: $parent.removeDamagedDomain">
-            <i class="icon-remove-sign"></i>
-            <span class="label">(Remove)</span>
-        </a>
-        <span data-bind="text: $data"></span>        
-    </li>
-</ul>
+<div class="container">
+    <div class="navbar navbar-inverse ">
+      <div class="navbar-inner">
+        <a class="brand" href="#">Options</a>
+<!--        <form id="adding-form" class="navbar-form pull-left">
+            <input id="new-input" type="text" >
+            <input type="submit" value="Add" class="btn">
+        </form>-->
+        &nbsp;&nbsp;
+        <form id="filtering-form" class="navbar-form pull-right">
+            <input type="text" class="search-query" placeholder="Filter">
+            <!--<button class="btn clear">Clear</button>-->
+        </form>
+        <!--
+        <form id="filtering-form" class="navbar-form pull-right">
+            <button class="btn">Bypass a hostname</button>
+            <button class="btn">Never bypass a hostname</button>
+            <button class="btn btn-danger">Remove all</button>
+        </form>
+        -->
+      </div>
+    </div>    
+    <div class="row">
+            <div class="lists span12">
+                <h2>Whitelist</h2>
+                <div id="whitelist"></div>
+                <h2>Blacklist</h2>
+                <div id="blacklist"></div>
+            </div>
+    </div>
+    
+</div>
 
-<script src="knockout-2.1.0.js"></script>
-<script src="jquery-1.7.1.min.js"></script>
-<script src="underscore-min.js"></script>
+
+
+<script src="vendor/js/jquery-1.7.1.min.js"></script>
+<script src="vendor/js/underscore.js"></script>
+<script src="vendor/js/backbone.js"></script>
+<script src="vendor/js/bootstrap.js"></script>
 <script src="options.js"></script>
 
 

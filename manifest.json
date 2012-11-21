@@ -18,9 +18,11 @@
     ],
     "background": {
         "scripts": [
-            "url.js",
-            "underscore.js",
-            "backbone.js",
+            "vendor/js/url.js",
+            "vendor/js/jquery-1.7.1.min.js",
+            "vendor/js/underscore.js",
+            "vendor/js/backbone.js",
+            "vendor/js/backbone-localstorage.js",
             "background.js"
         ]
     },
