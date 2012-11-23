@@ -26,7 +26,7 @@ var ListView = Backbone.View.extend({
         var list = this.model.getFilteredList(this.options.listName, filterString);
         var html
         if (list.length === 0) {
-            html = '<div class=emty-message>Nothing here</div>';
+            html = '<div class=empty-message>Nothing here</div>';
         }
         else {
             html = _(list).chain().map(function(item){
@@ -52,12 +52,6 @@ var ListView = Backbone.View.extend({
 
 
 $(function(){
-    //$("#damaged-domains-list").attr("data-bind", "foreach: damagedDomains");
-    //ko.applyBindings(viewModel);
-    //
-    //$("#adding-form").on("click", function() {
-    //    addDamagedDomain($('#new-input').val())
-    //});
     var filterField = $("#filtering-form input");
     
     var job = null;
